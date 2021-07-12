@@ -1,1 +1,1 @@
-web:gunicorn djangolessong2.wsgi --log-file -
+web: gunicorn djangolessong2.wsgi --log-file -
