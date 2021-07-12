@@ -1,0 +1,14 @@
+{% extends "blog/base.html" %}
+{% block header %}
+    <div class="jumbotron">
+    <h1>记录你的工作，并提供分享和总结。</h1>
+    </div>
+{% endblock header %}
+{% block content %}
+    <h2>
+    <a href="{% url 'users:register' %}">注册一个用户</a>使得你拥有自己的账户，并且能够创建工作主题和条目。
+    </h2>
+    <h2>
+    无论何时你都能创建新的主题和内容。
+    </h2>
+{% endblock content %}

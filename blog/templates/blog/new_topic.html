@@ -1,0 +1,27 @@
+{% extends 'blog/base.html' %}
+{% load bootstrap3 %}
+{% block header %}
+    <h1>增加新的主题：</h1>
+{% endblock header %}
+{% block content%}
+    <form action="{% url 'blog:new_topic' %}"  method="post" class="form">
+    {% csrf_token %}
+    {% bootstrap_form form %}
+        {% buttons %}
+    <button name="submit" class="btn btn-primary">提交</button>
+    {% endbuttons %}
+    </form>
+    <script>
+    $(function () {
+        $(":radio").click(function () {
+            if($(this).val()=="True"){
+                sessionStorage.setItem("tabid","#tab1");
+            }
+            else {
+                sessionStorage.setItem("tabid","#tab2");
+            }
+        });
+
+    });
+</script>
+{% endblock content %}

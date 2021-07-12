@@ -1,0 +1,256 @@
+{% extends 'blog/base.html' %}
+{% load i18n %}
+{% load bootstrap3 %}
+{% bootstrap_css %}         {# Embed Bootstrap CSS #}
+{% bootstrap_javascript jquery='full' %}
+{% block header %}
+    {% load static %}
+    <h2>汇总小结</h2>
+      <link href="/static/bootstrap3_datetime/css/bootstrap-datetimepicker.min.css" type="text/css" media="all" rel="stylesheet">
+      <link rel="stylesheet" type="text/css" href="/static/easyui/jquery-easyui-1.3.6/themes/default/easyui.css" media="all">
+      <link rel="stylesheet" type="text/css" href="/static/easyui/jquery-easyui-1.3.6/themes/icon.css" media="all">
+      <script src="/static/easyui/jquery-easyui-1.3.6/jquery.easyui.min.js"></script>
+    <script src="/static/bootstrap3_datetime/js/moment.min.js"></script>
+     <script src="/static/bootstrap3_datetime/js/bootstrap-datetimepicker.min.js"></script>
+     <script src="{% static 'bootstrap3_datetime/js/locales/bootstrap-datetimepicker.zh-CN.js' %}"></script>
+{% endblock header%}
+
+{% block content %}
+    <table border="0">
+    <tr>
+    <label class="control-label" for="id_date_star">开始日期</label>
+    <div class="input-group date" id="id_date_pickers_star">
+      <input class="form-control" id="id_date_star" name="date" placeholder="日期" required="True" title="" type="text" value="">
+      <span class="input-group-addon">
+        <span class="glyphicon-calendar glyphicon"></span>
+      </span>
+    </div>
+    <script>
+        (function(window) {
+            var callback = function() {
+                $(function(){$("#id_date_pickers_star:has(input:not([readonly],[disabled]))").datetimepicker({"format": "YYYY-MM-DD HH:mm", "pickSeconds": false, "language": "zh-CN"});});
+            };
+            if(window.addEventListener)
+                window.addEventListener("load", callback, false);
+            else if (window.attachEvent)
+                window.attachEvent("onload", callback);
+            else window.onload = callback;
+        })(window);
+    </script></tr>
+        <tr>
+    <label class="control-label" for="id_date_end">结束日期</label>
+    <div class="input-group date" id="id_date_pickers_end">
+      <input class="form-control" id="id_date_end" name="date" placeholder="日期" required="True" title="" type="text" value="">
+      <span class="input-group-addon">
+        <span class="glyphicon-calendar glyphicon"></span>
+      </span>
+    </div>
+    <script>
+        (function(window) {
+            var callback = function() {
+                $(function(){$("#id_date_pickers_end:has(input:not([readonly],[disabled]))").datetimepicker({"format": "YYYY-MM-DD HH:mm", "pickSeconds": false, "language": "zh-CN"});});
+            };
+            if(window.addEventListener)
+                window.addEventListener("load", callback, false);
+            else if (window.attachEvent)
+                window.attachEvent("onload", callback);
+            else window.onload = callback;
+        })(window);
+    </script></tr>
+   <tr><div><<<button class="control-label" id="bt_bthz">按标题汇总</button>>><<<button class="control-label" id="bt_grhz">按个人汇总</button>>></tr>
+
+
+    <table id="tt">
+  		<!-- 如果这块不写的话，只会显示标题 ,并且由于在上方script中定义了thead，所以在table里在定义一个thead是没有意义的，
+  			 当然在页面中也是没有效果的。
+  		-->
+
+  </table>
+
+
+</table>
+     <script>
+
+    $(function(){
+        $('#bt_bthz').click(function(){
+              var star_date = $("#id_date_star").val();
+              var end_date = $("#id_date_end").val();
+           $.ajax({
+
+               type:'post',
+               dataType:'text',
+               url:'./ajax_bthz_handle',  //访问的url地址
+                data:{
+                  'star_date':star_date,
+                  'end_date':end_date,
+                 },
+                success:function(data){
+                   var data1=JSON.parse(data);
+
+
+                    $('#tt').datagrid({
+		//     fit: true, //自适应大
+                pageSize: 20, //页面条数
+                striped: true, //是否显示斑马线效果。
+                rownumbers: true, //如果为true，则显示一个行号列。
+                fitColumn: false, //允许表格自动缩放，以适应父容器
+                pagination: true, //如果为true，则在DataGrid控件底部显示分页工具栏。
+                fitColumns: true, //真正的自动展开/收缩列的大小，以适应网格的宽度，防止水平滚动。
+                singleSelect: false, //如果为true，则只允许选择一行。
+                autoRowHeight: true, //定义设置行的高度，根据该行的内容。设置为false可以提高负载性能。
+                checkOnSelect: true,
+                selectOnCheck: true,  //selectOnCheck
+                nowrap: false, //设置为true，当数据长度超出列宽时将会自动截取
+		    columns:[[
+		        {field:'topic',title:'主题',width:100},
+		        {field:'entry',title:'工作内容',width:500},
+		        {field:'owner',title:'用户',width:50,align:'right'},
+                {field: 'date',title: '发布时间',width:105},
+                {field:'image_url',title:'图片附件',width: 200,
+                formatter:function(value){
+                          var strurls=value.toString().split(",");
+                          var str="";
+                           for(var i=0;i<strurls.length;i++)
+                           {
+                                 if(strurls[i]!="") {
+                                     str = str + '<a href="' + strurls[i] + '"><img style="width:25px;height:25px;" src="' + strurls[i] + '"/>'+(i+1)+'</a>';
+
+                                 }}
+                           return str;
+
+                }},
+                {field:'file_url',title: '文件附件',width: 200,
+                 formatter:function(value){
+                          var strurls=value.toString().split(",");
+                          var str="";
+                           for(var i=0;i<strurls.length;i++)
+                           {
+                               if(strurls[i]!=""){
+                               str=str+'<a href="'+strurls[i]+'"><img style="width:25px;height:25px;" src="/static/blog/img/file.jpeg"/>文件'+(i+1)+'</a>';
+
+                           }
+                        }
+                           return str;
+
+                }
+                }
+                ]]
+
+		});
+                    $('#tt').datagrid({loadFilter:pagerFilter}).datagrid('loadData',data1);
+
+
+
+              },
+
+
+     });
+
+         });
+    });
+function pagerFilter(data)
+{
+var dg = $('#tt').datagrid();
+var opts = dg.datagrid('options');
+var pager = dg.datagrid('getPager');
+pager.pagination({
+onSelectPage:function(pageNum, pageSize){
+opts.pageNumber = pageNum;
+opts.pageSize = pageSize;
+pager.pagination('refresh',{
+pageNumber:pageNum,
+pageSize:pageSize
+});
+dg.datagrid('loadData',data);
+}
+});
+if(!data.originalRows){
+data.originalRows =(data.rows);
+}
+var start =(opts.pageNumber-1)*parseInt(opts.pageSize);
+var end = start + parseInt(opts.pageSize);
+data.rows =(data.originalRows.slice(start, end));
+return data;
+}
+
+ $(function(){
+        $('#bt_grhz').click(function(){
+              var star_date = $("#id_date_star").val();
+              var end_date = $("#id_date_end").val();
+
+           $.ajax({
+
+               type:'post',
+               dataType:'text',
+               url:'./ajax_grhz_handle',  //访问的url地址
+                data:{
+                  'star_date':star_date,
+                  'end_date':end_date,
+                 },
+                success:function(data){
+                   var data1=JSON.parse(data);
+                   //$('#tt').datagrid('load',{ });
+                    $('#tt').datagrid({
+		//     fit: true, //自适应大
+                pageSize: 20, //页面条数
+                striped: true, //是否显示斑马线效果。
+                rownumbers: true, //如果为true，则显示一个行号列。
+                fitColumn: false, //允许表格自动缩放，以适应父容器
+                pagination: true, //如果为true，则在DataGrid控件底部显示分页工具栏。
+                fitColumns: true, //真正的自动展开/收缩列的大小，以适应网格的宽度，防止水平滚动。
+                singleSelect: false, //如果为true，则只允许选择一行。
+                autoRowHeight: true, //定义设置行的高度，根据该行的内容。设置为false可以提高负载性能。
+                checkOnSelect: true,
+                selectOnCheck: true,  //selectOnCheck
+                nowrap: false, //设置为true，当数据长度超出列宽时将会自动截取
+		    columns:[[
+		        {field:'topic',title:'主题',width:100},
+		        {field:'entry',title:'工作内容',width:500},
+		        {field:'owner',title:'用户',width:50,align:'right'},
+                {field: 'date',title: '发布时间',width:105},
+                {field: 'is_publish',title: '状态',width: 40},
+                {field:'image_url',title:'图片附件',width: 200,
+                formatter:function(value){
+                          var strurls=value.toString().split(",");
+                          var str="";
+                           for(var i=0;i<strurls.length;i++)
+                           {
+                                 if(strurls[i]!="") {
+                                     str = str + '<a href="' + strurls[i] + '"><img style="width:25px;height:25px;" src="' + strurls[i] + '"/>'+(i+1)+'</a>';
+
+                                 }}
+                           return str;
+
+                }},
+                {field:'file_url',title: '文件附件',width: 200,
+                 formatter:function(value){
+                          var strurls=value.toString().split(",");
+                          var str="";
+                           for(var i=0;i<strurls.length;i++)
+                           {
+                               if(strurls[i]!=""){
+                               str=str+'<a href="'+strurls[i]+'"><img style="width:25px;height:25px;" src="/static/blog/img/file.jpeg"/>文件'+(i+1)+'</a>';
+
+                           }
+                        }
+                           return str;
+
+                }
+                }
+                ]]
+
+		});
+$('#tt').datagrid({loadFilter:pagerFilter}).datagrid('loadData',data1);
+
+
+
+              },
+
+
+     });
+
+         });
+    });
+
+</script>
+{% endblock content %}django_content_type

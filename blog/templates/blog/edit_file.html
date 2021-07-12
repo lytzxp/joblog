@@ -1,0 +1,15 @@
+{% extends 'blog/base.html' %}
+{% load bootstrap3 %}
+{% block header %}
+    <h2>添加文件</h2>
+{% endblock %}
+{% block content %}
+      <form method="post" action="{% url 'blog:edit_entry_file' topic_id entry.id %}" class="form" enctype="multipart/form-data">
+    {% csrf_token %}
+    {% bootstrap_form ifform %}
+     {% buttons %}
+            <button name="submit" class=">保存</button>
+         {% endbuttons %}
+    <input type="hidden" name="next" value="{% url 'blog:index' %}"/>
+    </form>
+{% endblock %}

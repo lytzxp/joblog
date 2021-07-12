@@ -1,0 +1,20 @@
+nav ul li a {
+    float: left;
+    padding: 11px 20px;
+    font-size: 28px;
+    text-align: center;
+    text-decoration: none;
+    color: #fff;
+    font-family: Tahoma;
+    outline: none;
+}
+nav ul li {
+    display: inline;
+}
+nav ul {
+    float:left;
+    margin: 0px;
+    padding: 0 0 0 0;
+    width: 920px;
+    list-style: none;
+}

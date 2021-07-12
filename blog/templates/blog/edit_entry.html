@@ -1,0 +1,20 @@
+{% extends 'blog/base.html' %}
+{% load bootstrap3 %}
+{% load static %}
+{% bootstrap_css %}         {# Embed Bootstrap CSS #}
+{% bootstrap_javascript jquery='full' %}
+{% block header %}
+    <h2>编辑工作内容：<a href="{% url 'blog:topic' topic.id %}">{{ topic }}</a></h2>
+    {{ form.media }}
+        <script src="{% static 'bootstrap3_datetime/js/locales/bootstrap-datetimepicker.zh-CN.js' %}"></script>
+{% endblock header %}
+{% block content %}
+    <form action="{% url 'blog:edit_entry' entry.id %}" method="post" class="form">
+     {% csrf_token %}
+     {% bootstrap_form form %}
+        {% buttons %}
+     <button name="submit" class="btn btn-primary">保存</button>
+    {% endbuttons %}
+    </form>
+
+{% endblock content %}

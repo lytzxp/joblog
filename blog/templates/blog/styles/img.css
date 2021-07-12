@@ -1,0 +1,26 @@
+  *{
+        margin: 0;
+        padding: 0;
+    }
+    .wrapper{
+        width:660px;
+        height:200px;
+        margin:20px auto;
+        background: #ccc;
+        position: relative;
+        padding:20px;
+    }
+    .show{
+        height:200px;
+        width:200px;
+        display: inline-block;
+        position: relative;
+        overflow: hidden;
+        border:2px solid #fff;
+    }
+    img{
+        position: absolute;
+    }
+    .show+.show{
+        margin-left:16px;
+    }

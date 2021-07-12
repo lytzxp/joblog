@@ -1,0 +1,21 @@
+{% extends 'blog/base.html' %}
+{% load bootstrap3 %}
+{% load static %}
+{% bootstrap_css %}         {# Embed Bootstrap CSS #}
+{% bootstrap_javascript jquery='full' %}  {# Embed Bootstrap JS+jQuery #}
+           {# Adds date-picker required JS and CSS #}
+{% block header %}
+
+    <h1>增加工作内容<a href="{% url 'blog:topic' topic.id %}"> {{ topic }}</a></h1>
+{{ form.media }}
+    <script src="{% static 'bootstrap3_datetime/js/locales/bootstrap-datetimepicker.zh-CN.js' %}"></script>
+{% endblock header %}
+{% block content %}
+    <form action="{% url 'blog:new_entry' topic.id%}" method='post' class="form">
+    {% csrf_token %}
+    {% bootstrap_form form %}
+        {% buttons %}
+    <button name="submit" class="btn btn-primary">提交</button>
+    {% endbuttons %}
+    </form>
+{% endblock content %}

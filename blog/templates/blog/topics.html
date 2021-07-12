@@ -1,0 +1,82 @@
+{% extends 'blog/base.html' %}
+{% block header %}
+<link href="styles/navigation.css" rel="stylesheet" type="text/css"/>
+    <script>
+    $(function () {
+     var tabid=sessionStorage.getItem("tabid")
+        switch (tabid) {
+            case '#tab1':
+                $('#topictab  a[href="#tab1"]').tab('show')
+                break;
+            case '#tab2':
+                $('#topictab  a[href="#tab2"]').tab('show')
+                break;
+        }
+
+    })
+    </script>
+<nav>
+<ul class="nav nav-tabs" id="topictab">
+    <li><a href="#tab1" data-toggle="tab">公共主题</a></li>
+    <li><a href="#tab2" data-toggle="tab">个人主题</a></li>
+    <li><a href="{% url 'blog:new_topic' %}">增加主题</a></li></ul>
+</nav>
+{% endblock header %}
+{% block content %}
+     <div class="tab-content">
+        <div class="tab-pane fade in active" id="tab1">
+    <h2>公共主题({{ topicscount}})</h2>
+
+<ol>
+
+   {% for topic in topics %}
+
+       <h3> <li>
+       <p>
+          <a href="{% url 'blog:topic' topic.id %}"> {{ topic}}</a></h3>
+           <p><h6>
+           {% if not topic.owner.userinfo.nametext %}
+               {{ topic.owner }}(个人信息：无)
+             {% else %}
+              {{ topic.owner.userinfo.nametext }}
+              {% endif %}
+              创建  <a href="{% url 'blog:del_topic' topic.id %}">删除主题</a>
+       </h6></p>
+       </li>
+
+   {% empty %}
+    <li>没有主题</li>
+    {% endfor %}
+</ol>
+    </div>
+     <div class="tab-pane fade" id="tab2">
+         <h2> <a href="gxentry.html"> 共享的个人工作条目</a></h2>
+    <h2>个人主题({{ grtopicscount}})</h2>
+    <ol>
+    {% for topic in grtopics %}
+
+
+
+              <h3> <li>
+                    <a href="{% url 'blog:topic' topic.id %}"> {{ topic}}</a></h3><p>
+                <h6><a href="{% url 'blog:del_topic' topic.id %}">删除主题</a></h6></p>
+
+        </li>
+
+
+        </h3>
+        {% empty %}
+        <li>没有主题</li>
+    {% endfor %}
+    </ol>
+
+    </div>
+     </div>
+
+    <script>
+    $('.nav-tabs a').on('shown.bs.tab', function (e) {
+        sessionStorage.setItem("tabid", e.target.hash);
+
+    });
+</script>
+{% endblock content %}
