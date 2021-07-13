@@ -86,8 +86,6 @@
                  },
                 success:function(data){
                    var data1=JSON.parse(data);
-
-
                     $('#tt').datagrid({
 		//     fit: true, //自适应大
                 pageSize: 20, //页面条数
@@ -126,7 +124,7 @@
                            for(var i=0;i<strurls.length;i++)
                            {
                                if(strurls[i]!=""){
-                               str=str+'<a href="'+strurls[i]+'"><img style="width:25px;height:25px;" src="/static/blog/img/file.jpeg"/>文件'+(i+1)+'</a>';
+                               str=str+'<a href="'+strurls[i]+'"><img style="width:25px;height:25px;" src="/static/blog/img/file.jpeg"/>'+strurls[i].substring(17)+'</a>';
 
                            }
                         }
@@ -229,7 +227,7 @@ return data;
                            for(var i=0;i<strurls.length;i++)
                            {
                                if(strurls[i]!=""){
-                               str=str+'<a href="'+strurls[i]+'"><img style="width:25px;height:25px;" src="/static/blog/img/file.jpeg"/>文件'+(i+1)+'</a>';
+                               str=str+'<a href="'+strurls[i]+'"><img style="width:25px;height:25px;" src="/static/blog/img/file.jpeg"/>'+strurls[i].substring(17)+'</a>';
 
                            }
                         }

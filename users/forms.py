@@ -17,6 +17,5 @@ class UserinfoForm(forms.ModelForm):
             'zwdate':forms.DateInput(format=('%Y-%m-%d'),attrs={'type':'date'}),
             'djdate':forms.DateInput(format=('%Y-%m-%d'),attrs={'type':'date'}),
             'zcdate':forms.DateInput(format=('%Y-%m-%d'),attrs={'type':'date'}),
-
-        }
+    }
         ryimage=forms.ImageField(allow_empty_file=True)

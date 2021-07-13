@@ -17,7 +17,6 @@ from django.views.decorators.csrf import csrf_exempt
 # Create your views here.
 app = Flask(__name__)
 
-
 @app.route('/')
 def check_topic_owner(owner, user, is_publish):
     if owner != user and is_publish == False:
@@ -288,11 +287,16 @@ def ajax_bthz_handle(request):
             str="未公开主题"
         else:
             str=entry.topic.text
+        try:
+            userinfo=Userinfo.objects.get(owner=entry.owner)
+            strowner = userinfo.nametext
+        except Userinfo.DoesNotExist:
+            strowner=entry.owner.username
         y={
             'topic':str,
             'entry':entry.text,
             'date':entry.date.strftime("%Y-%m-%d %H:%M:%S"),
-            'owner':entry.owner.userinfo.nametext,
+            'owner':strowner,
             'image_url':img_url,
             'file_url':file_url,
         }
@@ -326,14 +330,19 @@ def ajax_grhz_handle(request):
             for entryfile in entryfiles:
                 file_url.append(entryfile.file.url)
         if not entry.is_publish:
-             str="公开"
-        else:
              str="私有"
+        else:
+             str="公开"
+        try:
+            userinfo = Userinfo.objects.get(owner=entry.owner)
+            strowner = userinfo.nametext
+        except Userinfo.DoesNotExist:
+            strowner = entry.owner.username
         y={
             'topic':entry.topic.text,
             'entry':entry.text,
             'date':entry.date.strftime("%Y-%m-%d %H:%M:%S"),
-            'owner':entry.owner.userinfo.nametext,
+            'owner':strowner,
             'is_publish': str,
             'image_url':img_url,
             'file_url':file_url,
@@ -341,7 +350,7 @@ def ajax_grhz_handle(request):
         }
         x.append(y)
     d={"total":entries.count(),
-        "rows":x
+         "rows":x
            }
     if d:
         data=json.dumps(d)
